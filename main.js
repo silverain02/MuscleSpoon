@@ -51,7 +51,7 @@ var app = http.createServer(function(request,response){
         
     }else if(pathname === '/profile'){
 
-        //회원가입페이지
+        //프로필페이지
         response.writeHead(200);
         response.end('This is profile');
         
