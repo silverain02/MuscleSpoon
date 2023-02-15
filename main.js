@@ -67,6 +67,9 @@ var app = http.createServer(function(request,response){
         response.writeHead(200);
         response.end('This is diet');
         
+    }else {
+        response.writeHead(404);
+        response.end('Not found');
     }
 
 });
