@@ -16,6 +16,10 @@ var db = mysql.createConnection({
 })
 db.connect();
 
+//프론트 페이지 끌어오기
+var template_navigation = require('./lib/navigation.js');
+
+
 //application
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -39,23 +43,9 @@ var app = http.createServer(function(request,response){
             }
             var name = userData[0].name;
             var gender = userData[0].gender;
+
+            var html = template_navigation.HTML(name,gender);
             
-            var template_navigation = `
-                <!DOCTYPE html>
-                <html lang="ko">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Navigation</title>
-                </head>
-                <body>
-                    <div>이름 : ${name}</div>
-                    <div>성별 : ${gender}</div>
-                    <a href="/profile?userId=${queryData.userId}">Profile</a>
-                    <a href="/exercise?userId=${queryData.userId}">Exercise</a>
-                    <a href="/diet?userId=${queryData.userId}">Diet</a>
-                </body>
-                </html>
-            `;
             response.writeHead(200);
             response.end(template_navigation);
         });
