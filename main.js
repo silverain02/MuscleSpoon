@@ -30,7 +30,6 @@ var app = http.createServer(function(request,response){
     var queryData = url.parse(_url, true).query;
     var pathname = url.parse(_url, true).pathname;
     var method = request.method;
-    console.log(method);
 
     if(pathname === '/'){
 
@@ -56,14 +55,79 @@ var app = http.createServer(function(request,response){
             response.end(template_navigation);
         });
 
-    }else if(pathname === '/auth/join'){
+    }else if(pathname === '/auth/join' && method === 'GET'){
 
         //회원가입페이지
-        response.writeHead(200);
-        response.end('This is join');
+        fs.readFile('./lib/join.html', function (err, data) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                response.writeHead(200, {'Content-Type': 'text/html'});
+                response.write(data);
+                response.end();
+            }
+        });
 
-    }
+    } else if (pathname === '/auth/join' && method === 'POST') {
+        //회원정보 db에 넣기
+    const joinBody = [];
     
+    request.on('data', (data) => {
+        joinBody.push(data);
+    })
+
+    request.on('end', () => {
+        const parsedBody = Buffer.concat(joinBody).toString();
+
+        let id = parsedBody.split("\"")[3];
+        let pw = parsedBody.split("\"")[7];
+        let name = parsedBody.split("\"")[11];
+        let gender = parsedBody.split("\"")[15];
+        let age = parsedBody.split("\"")[19];
+        let height = parsedBody.split("\"")[23];
+        let weight = parsedBody.split("\"")[27];
+
+        sql = "INSERT INTO user (id, userID, password, name, gender, age, height, weight) VALUES ?";
+        var values = [
+            [null, id, pw, name, gender, age, height, weight]
+        ];
+        db.query(sql, [values], function (err, result) {
+            if (err) throw err;
+            response.writeHead(200);
+            return response.end('1');
+        });
+    })
+    } else if (pathname === '/auth/findId') {
+        //아이디 중복 조회
+        const findIdBody = [];
+
+        request.on('data', (data) => {
+            findIdBody.push(data);
+        })
+
+        request.on('end', () => {
+            const parsedBody = Buffer.concat(findIdBody).toString();
+            var id = parsedBody.split("\"")[3]
+
+        sql = `SELECT userId FROM user WHERE userId=?`;
+            
+        db.query(sql, [id], function (err, result) {
+            if (err) throw err;
+
+            //아이디가 존재하지 않으면
+            if (result[0] === undefined) {
+                response.writeHead(200);
+                return response.end('0');
+            }
+            //아이디가 존재하면
+            else {
+                response.writeHead(200);
+                return response.end('1');
+            }
+        });
+    })
+    }
     else if (pathname === '/auth/login' && method === 'GET') {
 
         //로그인 페이지
