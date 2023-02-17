@@ -7,24 +7,25 @@ var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var mysql = require('mysql');
 
-//프론트 페이지 위치
-var template = require('./lib/template.js');
-
-//connect DB
-/*
+//임시 DB
 var db = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
-    password : '',  //fill in yours
-    database : ''   //need to fill in
+    password : 'dpapfkfem12@',  //fill in yours
+    database : 'muscleSpoon'   //need to fill in
 })
-db.connect()
-*/
+db.connect();
+
+//프론트 페이지 끌어오기
+var template_navigation = require('./lib/navigation.js');
+
 
 //application
 var app = http.createServer(function(request,response){
     var _url = request.url;
+    var queryData = url.parse(_url, true).query;
     var pathname = url.parse(_url, true).pathname;
+
     if(pathname === '/'){
 
         //main페이지
@@ -34,8 +35,20 @@ var app = http.createServer(function(request,response){
     }else if(pathname === '/navigation'){
 
         //navigation페이지
-        response.writeHead(200);
-        response.end('This is navigation');
+
+        //Read
+        db.query(`SELECT name,gender FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
+            if(error){
+                throw error;
+            }
+            var name = userData[0].name;
+            var gender = userData[0].gender;
+
+            var html = template_navigation.HTML(name,gender);
+            
+            response.writeHead(200);
+            response.end(template_navigation);
+        });
 
     }else if(pathname === '/auth/join'){
 
