@@ -18,6 +18,7 @@ db.connect();
 
 //프론트 페이지 끌어오기
 var template_navigation = require('./lib/navigation.js');
+var template_profile = require('./lib/profile.js');
 // var template_login = require('./lib/login.js');
 
 
@@ -40,12 +41,13 @@ var app = http.createServer(function(request,response){
         //navigation페이지
 
         //Read
-        db.query(`SELECT name,gender FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
+        db.query(`SELECT name,gender,weight FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
             if(error){
                 throw error;
             }
             var name = userData[0].name;
             var gender = userData[0].gender;
+            console.log(userData[0].weight);
 
             var html = template_navigation.HTML(name,gender,queryData.userId);
             
@@ -192,10 +194,24 @@ var app = http.createServer(function(request,response){
     }
     
     else if (pathname === '/profile') {
+        //Read
+        db.query(`SELECT * FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
+            if(error){
+                throw error;
+            }
+            var name = userData[0].name;
+            var gender = userData[0].gender;
+            var age = userData[0].age;
+            var height = userData[0].height;
+            var weight = userData[0].weight;
 
-        //프로필페이지
-        response.writeHead(200);
-        response.end('This is profile');
+            var html = template_profile.HTML(name,gender,age,height,weight);
+            
+            response.writeHead(200);
+            response.end(html);
+        });
+
+        //Update
         
     }else if(pathname === '/exercise'){
 
