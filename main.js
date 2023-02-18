@@ -6,15 +6,13 @@ var qs = require('querystring');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var mysql = require('mysql');
-var mysql2 = require('mysql2');
 
 //임시 DB
-var db = mysql2.createConnection({
+var db = mysql.createConnection({
     host     : 'localhost',
     user: 'root',
-    port: '3305',
-    password : 'goqlsdk1!!',  //fill in yours
-    database : 'musclespoon'   //need to fill in
+    password : 'dpapfkfem12@',  //fill in yours
+    database : 'muscleSpoon'   //need to fill in
 })
 db.connect();
 
@@ -49,10 +47,10 @@ var app = http.createServer(function(request,response){
             var name = userData[0].name;
             var gender = userData[0].gender;
 
-            var html = template_navigation.HTML(name,gender);
+            var html = template_navigation.HTML(name,gender,queryData.userId);
             
             response.writeHead(200);
-            response.end(template_navigation);
+            response.end(html);
         });
 
     }else if(pathname === '/auth/join' && method === 'GET'){
