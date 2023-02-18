@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join</title>
+</head>
+<body>
+  <div>
+    
+    <div id="title">
+      Create an Account
+    </div>
+
+    <div class="userId">
+      <span>아이디</span>
+      <input type="text" id="id" class="id" name="id" placeholder="ID" />
+      <button type="submit" id="checkId" onClick="checkId()">중복 확인</button>
+    </div>
+
+    <div class="password">
+      <span>비밀번호</span>
+      <input type="password" id="pw" class="pw" name="pw" placeholder="Password" />
+    </div>
+
+    <div classd="name">
+      <span>이름</span>
+      <input type="text" id="name" class="name" name="name" placeholder="Name" />
+    </div>
+
+    <div class="gender">
+      <span>성별</span>
+      <input type="checkbox" id="male" class="male" name="male" placeholder="male" />남자
+      <input type="checkbox" id="female" class="female" name="female" placeholder="female" />여자
+    </div>
+    <div class="age">
+      <span>나이</span>
+      <input type="number" id="age" class="age" name="age" placeholder="age" />
+    </div>
+    <div class="height">
+      <span>키</span>
+      <input type="number" id="height" class="height" name="height" placeholder="height" />
+    </div>
+    <div class="weight">
+      <span>몸무게</span>
+      <input type="number" id="weight" class="weight" name="weight" placeholder="weight" />
+    </div>
+
+    <button class="join" type="submit" onclick="postInfo()">회원가입</button>
+    <!-- </form> -->
+  </div>
+
+<script>
+  var idOk = false;
+
+  function checkId() {
+      const data = {
+        "id": document.getElementById('id').value,
+      }
+      console.log(data);
+
+      axios.post('http://localhost:3000/auth/findId', JSON.stringify(data), { credential: true })
+        .then((response) => {
+          console.log(response);
+          if (response.data === 1) {
+            alert('사용할 수 없는 아이디입니다. 다시 입력해주세요.')
+          }
+          else {
+            alert('사용할 수 있는 아이디입니다.');
+            idOk = true;
+          }
+        });
+    }
+
+  function postInfo() {
+    let gender = document.getElementById('female').checked ? 'female' : 'male';
+
+    if(idOk === false){
+      alert('아이디 중복 확인을 먼저 진행해주세요.');
+      return;
+    }
+
+    const data = {
+      "id" : document.getElementById('id').value,
+      "pw" : document.getElementById('pw').value,
+      "name" : document.getElementById('name').value,
+      "gender" : gender,
+      "age" : document.getElementById('age').value,
+      "height" : document.getElementById('height').value,
+      "weight" : document.getElementById('weight').value,
+    }
+    console.log(data);
+    
+    axios.post('http://localhost:3000/auth/join', JSON.stringify(data), {credential: true})
+    .then((response) => {
+      console.log(response);
+      if(response.data === 1){
+        alert('회원가입에 성공하셨습니다.');
+        location.href = '/auth/login';
+      }
+      else{
+        alert('회원가입에 실패했습니다. 정보를 다시 확인해주세요.');
+      }
+    });
+  }
+
+</script>
+</body>
+</html>
