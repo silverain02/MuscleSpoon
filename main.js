@@ -17,11 +17,10 @@ var db = mysql.createConnection({
 db.connect();
 
 //프론트 페이지 끌어오기
+var template_greeter = require('./lib/greeter.js');
 var template_navigation = require('./lib/navigation.js');
 var template_profile = require('./lib/profile.js');
 // var template_login = require('./lib/login.js');
-
-
 
 //application
 var app = http.createServer(function(request,response){
@@ -31,10 +30,11 @@ var app = http.createServer(function(request,response){
     var method = request.method;
 
     if(pathname === '/'){
+        var html = template_greeter.HTML();
 
         //main페이지
         response.writeHead(200);
-        response.end('This is main');
+        response.end(html);
         
     }else if(pathname === '/navigation'){
 
@@ -47,7 +47,6 @@ var app = http.createServer(function(request,response){
             }
             var name = userData[0].name;
             var gender = userData[0].gender;
-            console.log(userData[0].weight);
 
             var html = template_navigation.HTML(name,gender,queryData.userId);
             
@@ -205,14 +204,39 @@ var app = http.createServer(function(request,response){
             var height = userData[0].height;
             var weight = userData[0].weight;
 
-            var html = template_profile.HTML(name,gender,age,height,weight);
+            var html = template_profile.HTML(name,gender,age,height,weight,queryData.userId);
             
             response.writeHead(200);
             response.end(html);
         });
-
-        //Update
         
+    }else if(pathname === '/profile/edit'){
+        //회원정보 수정
+
+        //수정정보
+        const _data = [];
+
+        request.on('data', (data) => {
+            _data.push(data);
+        })
+        request.on('end', () => {
+            const parsedBody = Buffer.concat(_data).toString();
+
+            var age = parsedBody.split("\"")[3];
+            var height = parsedBody.split("\"")[7];
+            var weight = parsedBody.split("\"")[11];
+            var userId = parsedBody.split("\"")[15];
+
+            db.query(`UPDATE user SET age = ${age}, height = ${height}, weight = ${weight} WHERE userId=?`,userId, function(error,result){
+                if(error){
+                    throw error;
+                }
+                response.writeHead(204);
+                response.end();
+            });
+        })
+
+
     }else if(pathname === '/exercise'){
 
         //운동기록
