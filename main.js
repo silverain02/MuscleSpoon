@@ -6,23 +6,21 @@ var qs = require('querystring');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var mysql = require('mysql');
-var mysql2 = require('mysql2');
 
 //임시 DB
-var db = mysql2.createConnection({
+var db = mysql.createConnection({
     host     : 'localhost',
     user: 'root',
-    port: '3305',
-    password : 'goqlsdk1!!',  //fill in yours
-    database : 'musclespoon'   //need to fill in
+    password : 'dpapfkfem12@',  //fill in yours
+    database : 'muscleSpoon'   //need to fill in
 })
 db.connect();
 
 //프론트 페이지 끌어오기
+var template_greeter = require('./lib/greeter.js');
 var template_navigation = require('./lib/navigation.js');
+var template_profile = require('./lib/profile.js');
 // var template_login = require('./lib/login.js');
-
-
 
 //application
 var app = http.createServer(function(request,response){
@@ -35,27 +33,28 @@ var app = http.createServer(function(request,response){
     response.setHeader('Access-Control-Allow-Credentials', 'true');
 
     if(pathname === '/'){
+        var html = template_greeter.HTML();
 
         //main페이지
         response.writeHead(200);
-        response.end('This is main');
+        response.end(html);
         
     }else if(pathname === '/navigation'){
 
         //navigation페이지
 
         //Read
-        db.query(`SELECT name,gender FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
+        db.query(`SELECT name,gender,weight FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
             if(error){
                 throw error;
             }
             var name = userData[0].name;
             var gender = userData[0].gender;
 
-            var html = template_navigation.HTML(name,gender);
+            var html = template_navigation.HTML(name,gender,queryData.userId);
             
             response.writeHead(200);
-            response.end(template_navigation);
+            response.end(html);
         });
 
     }else if(pathname === '/auth/join' && method === 'GET'){
@@ -197,11 +196,50 @@ var app = http.createServer(function(request,response){
     }
     
     else if (pathname === '/profile') {
+        //Read
+        db.query(`SELECT * FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
+            if(error){
+                throw error;
+            }
+            var name = userData[0].name;
+            var gender = userData[0].gender;
+            var age = userData[0].age;
+            var height = userData[0].height;
+            var weight = userData[0].weight;
 
-        //프로필페이지
-        response.writeHead(200);
-        response.end('This is profile');
+            var html = template_profile.HTML(name,gender,age,height,weight,queryData.userId);
+            
+            response.writeHead(200);
+            response.end(html);
+        });
         
+    }else if(pathname === '/profile/edit'){
+        //회원정보 수정
+
+        //수정정보
+        const _data = [];
+
+        request.on('data', (data) => {
+            _data.push(data);
+        })
+        request.on('end', () => {
+            const parsedBody = Buffer.concat(_data).toString();
+
+            var age = parsedBody.split("\"")[3];
+            var height = parsedBody.split("\"")[7];
+            var weight = parsedBody.split("\"")[11];
+            var userId = parsedBody.split("\"")[15];
+
+            db.query(`UPDATE user SET age = ${age}, height = ${height}, weight = ${weight} WHERE userId=?`,userId, function(error,result){
+                if(error){
+                    throw error;
+                }
+                response.writeHead(204);
+                response.end();
+            });
+        })
+
+
     }else if(pathname === '/exercise'){
 
         //운동기록
