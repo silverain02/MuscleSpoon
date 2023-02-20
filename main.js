@@ -31,6 +31,9 @@ var app = http.createServer(function(request,response){
     var pathname = url.parse(_url, true).pathname;
     var method = request.method;
 
+    response.setHeader('Access-Control-Allow-origin', '*');
+    response.setHeader('Access-Control-Allow-Credentials', 'true');
+
     if(pathname === '/'){
 
         //main페이지
