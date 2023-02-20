@@ -7,13 +7,117 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login</title>
+
+        <style>
+              *{
+  margin: 0;
+  padding: 0;
+}
+
+.main_wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title{
+  margin-top: 150px;
+  margin-bottom: 30px;
+  
+  font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+
+    /* 드래그 방지 */
+  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.id, .pw{
+  
+  height: 20px;
+  width: 300px;
+
+  margin: 10px;
+  padding: 15px;
+
+  background: #F7F8F8;
+  border: 1px solid #F7F8F8;
+  border-radius: 14px;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #ADA4A5;
+}
+
+.login{
+  height: 60px;
+  width: 330px;
+
+  margin-top: 40px;
+  margin-bottom: 20px;
+  background: linear-gradient(274.42deg, #92A3FD 0%, #9DCEFF 124.45%);
+  border-radius: 99px;
+  border: none;
+
+  color: white;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+
+  cursor: pointer;
+}
+
+
+.stick{
+  color: #DDDADA;
+  margin: 15px;
+
+  /* 드래그 방지 */
+  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.or{
+  color: black;
+  font-family: 'Poppins';
+}
+
+.gotoJoin{
+  font-family: 'Poppins';
+  margin-top: 10px;
+}
+
+.loginText{
+  list-style: none;
+  text-decoration: none;
+  color: #C58BF2;
+  font-weight: 600;
+}
+        </style>
       </head>
       <body>
         <div class="main_wrapper">
-          <div>MUSCLE-SPOON</div>
+          <div class="title">MUSCLE-SPOON</div>
           <input type="text" id="id" class="id" name="id" placeholder="ID"/>
           <input type="text" id="pw" class="pw" name="pw" placeholder="Password"/>
           <button type="submit" class="login" onClick="login()">Log in</button>
+
+          <div class="stick">―――――――――<span class="or"> or </span>―――――――――</div>
+          <div class="gotoJoin">Do you want to join? <a href="/auth/join" class="loginText">Join</a></div>
         </div>
 
         <script>

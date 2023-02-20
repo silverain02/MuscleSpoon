@@ -1,60 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8">
+
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Join</title>
+  <!-- <meta http-equiv="refresh" content="5"> -->
+  <!-- <link rel="stylesheet" href="./join.css"> -->
+  <style>
+    *{
+  margin: 0;
+  padding: 0;
+}
+
+.main_wrapper{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+#title{
+  margin-top: 70px;
+  margin-bottom: 30px;
+  
+  font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+
+    /* 드래그 방지 */
+  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* align-items는 수평 정렬, justify-content는 수직 정렬 */
+.userId{
+  display: flex;
+  flex-direction: row;
+  align-items: center; 
+  justify-content: center;
+
+  margin: 10px 0;
+  width: 100%;
+}
+
+#id{
+  /* width: 57%; */
+  width: 230px;
+  height: 20px;
+
+  padding: 15px;
+  margin-right: 12px;
+  
+  background: #F7F8F8;
+  border: 1px solid #F7F8F8;
+  border-radius: 14px;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #ADA4A5;
+}
+
+#checkId{
+  /* width: 17%; */
+  width: 60px;
+  height: 50px;
+
+  background-color: #F7F8F8;
+  border: 1px solid #7e7c7c;
+  border-radius: 50px;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+
+  color: #7e7c7c;
+  cursor: pointer;
+}
+
+#pw, #chk_pw, #name, #age, #height, #weight
+{ 
+  height: 20px;
+  width: 300px;
+
+  margin: 10px;
+  padding: 15px;
+
+  background: #F7F8F8;
+  border: 1px solid #F7F8F8;
+  border-radius: 14px;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #ADA4A5;
+}
+
+.gender{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  margin: 15px 0;
+}
+
+.maleContext{
+  margin-left: 10px;
+  margin-right: 60px;
+}
+
+
+.femaleContext{
+  margin-left: 10px;
+}
+
+input[type='checkbox'] {
+  text-align: center;
+}
+
+.hw_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#height,
+#weight {
+  width: 125px;
+}
+
+#male, #female{
+  background: #FFFFFF;
+
+  border: 0.8px solid #ADA4A5;
+  border-radius: 3px;
+}
+
+.join{
+  height: 60px;
+  width: 330px;
+
+  margin-top: 20px;
+  background: linear-gradient(274.42deg, #92A3FD 0%, #9DCEFF 124.45%);
+  border-radius: 99px;
+  border: none;
+
+  color: white;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+
+  cursor: pointer;
+}
+
+.stick{
+  color: #DDDADA;
+  margin: 15px;
+
+  /* 드래그 방지 */
+  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.or{
+  color: black;
+  font-family: 'Poppins';
+}
+
+.gotoLogin{
+  font-family: 'Poppins';
+  margin-top: 10px;
+}
+
+.loginText{
+  list-style: none;
+  text-decoration: none;
+  color: #C58BF2;
+  font-weight: 600;
+}
+
+input:focus{
+  /* border: 0.5px solid #6e6e6e; */
+  border: none;
+  outline: none; 
+}
+
+.errMsgID{
+  position: relative;
+  right:50px;
+  font-size: 10px;
+  color:red;
+}
+.errMsgPW{
+  position: relative;
+  right: 30px;
+  font-size: 10px;
+  color:red;
+}
+
+  </style>
 </head>
 <body>
-  <div>
+  <div class="main_wrapper">
     
     <div id="title">
       Create an Account
     </div>
 
-    <div class="userId">
-      <span>아이디</span>
-      <input type="text" id="id" class="id" name="id" placeholder="ID" />
-      <button type="submit" id="checkId" onClick="checkId()">중복 확인</button>
+    <div class="userId_wrapper">
+      <div class="userId">
+          <input 
+            type="text" 
+            id="id" 
+            class="id" 
+            name="id" 
+            placeholder="ID" 
+            onInput="changeId()"
+          />
+          <input type="button" id="checkId" value="중복 확인" onClick="checkId()"/>
+      </div>
+      <div class="errMsgID" id="errMsgID">영문자로 시작하는 영문자 또는 숫자 6 ~ 15자</div>
     </div>
 
     <div class="password">
-      <span>비밀번호</span>
-      <input type="password" id="pw" class="pw" name="pw" placeholder="Password" />
+      <input 
+        type="password" 
+        id="pw" 
+        class="pw" 
+        name="pw" 
+        placeholder="Password" 
+        onInput="changePw()"
+      />
+      <div class="errMsgPW" id="errMsgPW">8 ~ 16자의 영문, 숫자, 특수 문자가 최소 한 자씩 포함</div>
     </div>
 
-    <div classd="name">
-      <span>이름</span>
+    <div class="password_check">
+      <input type="password" id="chk_pw" class="chk_pw" name="chk_pw" placeholder="Password Check" />
+    </div>
+
+    <div class="name">
       <input type="text" id="name" class="name" name="name" placeholder="Name" />
     </div>
 
     <div class="gender">
-      <span>성별</span>
-      <input type="checkbox" id="male" class="male" name="male" placeholder="male" />남자
-      <input type="checkbox" id="female" class="female" name="female" placeholder="female" />여자
+      <input type="radio" id="male" class="male" name="gender" value="male" placeholder="male" />
+      <label for="male" class="maleContext">남자</label>
+      <input type="radio" id="female" class="female" name="gender" value="female" placeholder="female" />
+      <label for="female" class="femaleContext">여자</label>
     </div>
+    
     <div class="age">
-      <span>나이</span>
-      <input type="number" id="age" class="age" name="age" placeholder="age" />
-    </div>
-    <div class="height">
-      <span>키</span>
-      <input type="number" id="height" class="height" name="height" placeholder="height" />
-    </div>
-    <div class="weight">
-      <span>몸무게</span>
-      <input type="number" id="weight" class="weight" name="weight" placeholder="weight" />
+      <input type="number" id="age" class="age" name="age" placeholder="Age" />
     </div>
 
-    <button class="join" type="submit" onclick="postInfo()">회원가입</button>
-    <!-- </form> -->
+    <div class="hw_wrapper">
+      <span class="height">
+        <input type="number" id="height" class="height" name="height" placeholder="Height" />
+      </span>
+      <span class="weight">
+        <input type="number" id="weight" class="weight" name="weight" placeholder="Weight" />
+      </span>
+    </div>
+
+    <div>
+      <button class="join" type="submit" onclick="postInfo()">Register</button>
+    </div>
+
+    <div class="stick">―――――――――<span class="or"> or </span>―――――――――</div>
+    <div class="gotoLogin">Already have an account? <a href="/auth/login" class="loginText">Login</a></div>
   </div>
+
 
 <script>
   var idOk = false;
+  var IdReg = /^[a-zA-Z][0-9a-zA-Z]{5,14}$/;
+  var PwReg = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
 
+  //아이디 입력시 정규식 일치하는지 확인
+  function changeId(){
+    var idRegOk = IdReg.test(document.getElementById('id').value);
+    var idErrorInput = document.getElementById('errMsgID');
+    if(idRegOk){
+      idErrorInput.style.display = 'none';
+      document.getElementById('id').style.border = 'none';
+    }else {
+      idErrorInput.style.display = 'block';
+    }
+  }
+
+  //비밀번호 입력시 정규식 일치하는지 확인
+  function changePw(){
+    var pwRegOk = PwReg.test(document.getElementById('pw').value);
+    var pwErrorInput = document.getElementById('errMsgPW');
+    if (pwRegOk) {
+      pwErrorInput.style.display = 'none';
+      document.getElementById('pw').style.border = 'none';
+    }else{
+      pwErrorInput.style.display = 'block';
+    }
+  }
+
+  //아이디 중복 확인
   function checkId() {
       const data = {
         "id": document.getElementById('id').value,
@@ -74,9 +339,17 @@
         });
     }
 
+    //회원가입 과정
   function postInfo() {
-    let gender = document.getElementById('female').checked ? 'female' : 'male';
 
+    let gender = '';
+    if(document.getElementsByName('gender')[0].checked){
+      gender = 'male';
+    }else if(document.getElementsByName('gender')[1].checked){
+      gender = 'female';
+    }
+
+    //아이디 중복 확인 여부
     if(idOk === false){
       alert('아이디 중복 확인을 먼저 진행해주세요.');
       return;
@@ -91,7 +364,43 @@
       "height" : document.getElementById('height').value,
       "weight" : document.getElementById('weight').value,
     }
-    console.log(data);
+
+    if(data.id.trim().length === 0){
+      alert('아이디를 입력하세요.');
+      return;
+    }else if(data.pw.trim().length === 0){
+      alert('비밀번호를 입력하세요.');
+      return;
+    }else if(document.getElementById('chk_pw').value.trim().length === 0){
+      alert('확인 비밀번호를 입력하세요.');
+      return;
+    }else if(data.name.trim().length === 0){
+      alert('이름을 입력하세요.');
+      return;
+    }else if(gender === ''){
+      alert('성별을 선택하세요.');
+      return;
+    }else if(data.age.trim().length === 0){
+      alert('나이를 입력하세요.');
+      return;
+    }else if(data.height.trim().length === 0){
+      alert('키를 입력하세요.');
+      return;
+    }else if(data.weight.trim().length === 0) {
+      alert('몸무게를 입력하세요.');
+      // document.getElementById('weight').style.border = '1px solid red';
+      return;
+    } else if (data.pw !== document.getElementById('chk_pw').value) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    } else if(!IdReg.test(document.getElementById('id').value)) {
+      document.getElementById('id').style.border = '1px solid red';
+      idOk = false;
+      return;
+    }else if(!PwReg.test(document.getElementById('pw').value)){
+      document.getElementById('pw').style.border = '1px solid red';
+      return;
+    }
     
     axios.post('http://localhost:3000/auth/join', JSON.stringify(data), {credential: true})
     .then((response) => {
