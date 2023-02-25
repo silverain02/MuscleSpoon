@@ -287,13 +287,47 @@ var app = http.createServer(function(request,response){
         
         
     }
-    else if (pathname === '/diet') {
+    else if (pathname === '/diet' && method === 'GET') {
 
         //식단기록
-        response.writeHead(200);
-        response.end('This is diet');
+        fs.readFile('./lib/diet.html', function (err, data) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                response.writeHead(200, {'Content-Type': 'text/html'});
+                response.write(data);
+                response.end();
+            }
+        });
+
         
-    }else {
+    } else if (pathname === '/diet' && method === 'POST') {
+        //식단기록
+        
+        const loginBody = [];
+            
+        request.on('data', (data) => {
+            loginBody.push(data);
+        })
+
+        request.on('end', () => {
+            const parsedBody = Buffer.concat(loginBody).toString();
+            const clickDate = parsedBody.split("\"")[3];
+            console.log(clickDate, queryData.userId);
+
+            sql = `SELECT * FROM diet WHERE DATE(date)=? AND userId=?`;
+            
+        db.query(sql, [clickDate, queryData.userId], function (err, result) {
+            if (err) throw err;
+
+            console.log(result);
+            response.writeHead(200);
+            return response.end(JSON.stringify(result));
+        });
+        })
+    }
+    else {
         response.writeHead(404);
         response.end('Not found');
     }
