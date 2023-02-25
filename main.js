@@ -5,14 +5,15 @@ var url = require('url');
 var qs = require('querystring');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
-var mysql = require('mysql');
+var mysql2 = require('mysql2');
 
 //임시 DB
-var db = mysql.createConnection({
+var db = mysql2.createConnection({
     host     : 'localhost',
     user: 'root',
-    password : 'dpapfkfem12@',  //fill in yours
-    database : 'muscleSpoon'   //need to fill in
+    port: '3305',
+    password : 'goqlsdk1!!',  //fill in yours
+    database : 'musclespoon'   //need to fill in
 })
 db.connect();
 
@@ -199,7 +200,7 @@ var app = http.createServer(function(request,response){
         //Read
         db.query(`SELECT * FROM user WHERE userId=?`,[queryData.userId], function(error,userData){
             if(error){
-                throw error;
+                throw error;   
             }
             var name = userData[0].name;
             var gender = userData[0].gender;
@@ -240,13 +241,53 @@ var app = http.createServer(function(request,response){
         })
 
 
-    }else if(pathname === '/exercise'){
+    }else if(pathname === '/exercise' && method === "GET"){
 
         //운동기록
-        response.writeHead(200);
-        response.end('This is exercise');
         
-    }else if(pathname === '/diet'){
+        // console.log(today);
+        var userId = queryData.userId;
+        // console.log(userId);
+        fs.readFile('./lib/exercise.html', function (err, data) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                response.writeHead(200, {'Content-Type': 'text/html'});
+                response.write(data);
+                response.end();
+            }
+        });
+        
+    }else if(pathname === '/exercise' && method === "POST"){
+
+        //운동기록
+        
+        const loginBody = [];
+            
+        request.on('data', (data) => {
+        loginBody.push(data);
+        })
+
+        request.on('end', () => {
+            const parsedBody = Buffer.concat(loginBody).toString();
+            const clickDate = parsedBody.split("\"")[3];
+            console.log(clickDate, queryData.userId);
+
+            sql = `SELECT * FROM exercise WHERE DATE(date)=? AND userId=?`;
+            
+        db.query(sql, [clickDate, queryData.userId], function (err, result) {
+            if (err) throw err;
+
+            console.log(result);
+            response.writeHead(200);
+            return response.end(JSON.stringify(result));
+        });
+        })
+        
+        
+    }
+    else if (pathname === '/diet') {
 
         //식단기록
         response.writeHead(200);
