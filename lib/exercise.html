@@ -30,8 +30,8 @@ margin: 40px 0;
     }
 
     .toggleSwitch {
-    width: 100px;
-    height: 50px;
+    width: 80px;
+    height: 40px;
     display: inline-block;
     position: relative;
     border-radius: 30px;
@@ -42,11 +42,11 @@ margin: 40px 0;
 }
 
 .toggleSwitch .toggleButton {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   position: absolute;
   top: 50%;
-  left: 4px;
+  left: 6px;
   transform: translateY(-50%);
   border-radius: 50%;
   background: #f03d3d;
@@ -57,7 +57,7 @@ margin: 40px 0;
 }
 
 #toggle:checked ~ .toggleSwitch .toggleButton {
-  left: calc(100% - 44px);
+  left: calc(100% - 38px);
   background: #fff;
 }
 
@@ -117,6 +117,7 @@ text-align: center;
         <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()" value="<">전</button>
         <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()" value=">">후</button>
       </div>
+      
       <input type="checkbox" id="toggle" hidden>
       
       <label for="toggle" class="toggleSwitch">
@@ -322,6 +323,14 @@ text-align: center;
         nowDay = document.getElementById(`date${j + 1}`);
         nowDay.innerHTML = `<div id=${backFormatDate[0]}-${backFormatDate[1]}>${backFormatDate[2]}</div>`
         
+        const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
+        if(nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()){
+          nowDay.parentElement.style.background = '#DDDADA';
+        }else if(nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`){
+          nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
+        } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
+          nowDay.parentElement.style.background = '#DDDADA';
+        }
 
         backFormatDate = backFormatDate[0] + "-" + backFormatDate[1] + "-" + backFormatDate[2];
 
@@ -366,6 +375,15 @@ text-align: center;
           let nowDay;
           nowDay = document.getElementById(`date${j + 1}`);
           nowDay.innerHTML = `<div id=${nextFormatDate[0]}-${nextFormatDate[1]}>${nextFormatDate[2]}</div>`
+
+          const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
+          if (nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()) {
+            nowDay.parentElement.style.background = '#DDDADA';
+          } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`) {
+            nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
+          } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
+            nowDay.parentElement.style.background = '#DDDADA';
+          }
 
           nextFormatDate = nextFormatDate[0] + "-" + nextFormatDate[1] + "-" + nextFormatDate[2];
           nextWeekArr.push(nextFormatDate);
