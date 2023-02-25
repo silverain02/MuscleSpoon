@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .main_wrapper{
+display: flex;
+flex-direction: column;
+align-items: center;
+margin: 40px 0;
+    }
+
+    header{
+      width: 100%;
+      
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      /* display: inline; */
+    }
+
+    #weekRange{
+      line-height: 60px;
+      margin-right: 20px;
+    }
+
+    .toggleSwitch {
+    width: 100px;
+    height: 50px;
+    display: inline-block;
+    position: relative;
+    border-radius: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+    cursor: pointer;
+    margin: 10px;
+}
+
+.toggleSwitch .toggleButton {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #f03d3d;
+}
+
+#toggle:checked ~ .toggleSwitch {
+  background: #f03d3d;
+}
+
+#toggle:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 44px);
+  background: #fff;
+}
+
+.toggleSwitch, .toggleButton {
+  transition: all 0.2s ease-in;
+}
+
+.weekDate{
+  width: 390px;
+  padding: 20px 0;
+  overflow: scroll;
+  color: #112031;
+
+   /* 가로 스크롤 */
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.dateBox{
+  display: inline-block;
+  width: 100px;
+  height: 80px;
+  background-color: #DDDADA;
+  cursor: pointer;
+}
+
+.content_wrapper{
+display: flex;
+flex-direction: column;
+text-align: center;
+}
+
+.content{
+  width: 315px;
+  height: 209px;
+}
+
+.exercise_list{
+  padding-left: 0px;
+}
+
+.exercise_content{
+  list-style: none;
+}
+
+.goal{
+  width: 315px;
+  height: 150px;
+}
+  </style>
+</head>
+<body>
+
+  <div class="main_wrapper">
+    <header>
+      <div id="weekRange" class="weekRange">
+        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()" value="<">전</button>
+        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()" value=">">후</button>
+      </div>
+      <input type="checkbox" id="toggle" hidden>
+      
+      <label for="toggle" class="toggleSwitch">
+        <span class="toggleButton"></span>
+      </label>
+    </header>
+    
+    <div id="weekDate" class="weekDate">
+      <span class="dateBox" onClick="getInfo()">
+        <p>Mon</p>
+        <div id="date1"></div>
+      </span>
+      <span class="dateBox" onClick="getInfo()">
+        <p>Tue</p>
+        <div id="date2"></div>
+      </span>
+      <span class="dateBox" onClick="getInfo()">
+        <p>Wed</p>
+        <div id="date3"></div>
+      </span>
+      <span class="dateBox" onClick="getInfo()">
+        <p>Thu</p>
+        <div id="date4"></div>
+      </span>
+      <span class="dateBox" onClick="getInfo()">
+        <p>Fri</p>
+        <div id="date5"></div>
+      </span>
+      <span class="dateBox" onClick="getInfo()">
+        <p>Sat</p>
+        <div id="date6"></div>
+      </span>
+      <span class="dateBox" onClick="getInfo()">
+        <p>Sun</p>
+        <div id="date7"></div>
+      </span>
+    </div>
+
+    <main class="content_wrapper">
+      <div class="content">
+        <h2 id="content_date"></h2>
+        <ul id="exercise_list">
+          
+        </ul>
+      </div>
+      <div class="goal">
+        목표 달성률
+        <div id="goal_per"></div>
+      </div>
+    </main>
+  </div>
+  <script>
+    //일주일 범위 구하기
+    var currentDay = new Date();
+    var theYear = currentDay.getFullYear();
+    var theMonth = currentDay.getMonth();
+    var theDate = currentDay.getDate();
+    var theDayOfWeek = currentDay.getDay();
+
+
+    var today = `${theYear}-${theMonth}-${theDate}`;
+    var thisWeek = [];
+
+    var day = [];
+
+    for (var i = 0; i < 7; i++) {
+      var resultDay = new Date(theYear, theMonth, theDate + (i - theDayOfWeek + 1));
+      var yyyy = resultDay.getFullYear();
+      var mm = Number(resultDay.getMonth()) + 1;
+      var dd = resultDay.getDate();
+
+      mm = String(mm).length === 1 ? '0' + mm : mm;
+      dd = String(dd).length === 1 ? '0' + dd : dd;
+
+      thisWeek[i] = yyyy + '-' + mm + '-' + dd;
+
+      day[i] = document.getElementById(`date${i + 1}`);
+      day[i].innerHTML = `<div id=${yyyy}-${mm}>${dd}</div>`
+
+
+      if(dd === theDate){
+        //오늘 날짜에 색칠하기
+        day[i].parentElement.style.background = 'linear-gradient(274.42deg, #92A3FD 0%, #9DCEFF 124.45%)';
+
+        //오늘 날짜 표시
+        document.getElementById('content_date').innerText = `${dd}일`;
+
+        //오늘 날짜 운동 목록 표시
+        const paramsBody = [];
+        const searchParams = new URLSearchParams(window.location.href);
+        for (const param of searchParams) {
+          paramsBody.push(param[1]);
+        }
+
+        axios.post(`http://localhost:3000/exercise?userId=${paramsBody[0]}`, {
+          date: `${yyyy}-${mm}-${dd}`
+        }, { credential: true })
+          .then((response) => {
+            console.log(response.data);
+            let goalPer = 0;
+            for (var i = 0; i < response.data.length; i++) {
+              const list = document.getElementById("exercise_list");
+
+              if (response.data[i].checked === 1) {
+                list.innerHTML += `<li class="exercise_content"><img src="../images/check.png" alt="체크"/> V ${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
+                goalPer++;
+              }else{
+                list.innerHTML += `<li class="exercise_content">${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
+              }
+            }
+            goalPer = goalPer / response.data.length;
+            document.getElementById('goal_per').innerText = goalPer ? `${goalPer * 100}%` : `0%`;
+          })
+      }
+    }
+
+    var week = document.getElementById('weekRange');
+    week.innerHTML = `
+    <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><</button>
+    ${thisWeek[0]} ~ ${thisWeek[6]}
+    <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()">></button>
+    `
+
+    //날짜 클릭했을 때 정보 가져오기
+    function getInfo(e) {
+      const paramsBody = [];
+      const searchParams = new URLSearchParams(window.location.href);
+      for(const param of searchParams){
+        paramsBody.push(param[1]);
+      }
+      const clickDay = event.currentTarget.children[1].innerText;
+      const clickYear = event.currentTarget.children[1].children[0].id.split("-")[0];
+      const clickMon = event.currentTarget.children[1].children[0].id.split("-")[1];
+      if(clickDay == theDate){
+        return;
+      }
+      axios.post(`http://localhost:3000/exercise?userId=${paramsBody[0]}`,{
+        date: `${clickYear}-${clickMon}-${clickDay}`
+      }, {credential: true})
+      .then((response) => {
+        console.log(response.data);
+        const list = document.getElementById("exercise_list");
+
+        let clickGoalPer = 0;
+        list.innerHTML = "";
+        for(var i = 0; i < response.data.length; i++){
+          
+          if (response.data[i].checked === 1) {
+            list.innerHTML += `<li class="exercise_content">V ${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
+            clickGoalPer++;
+          } else {
+            list.innerHTML += `<li class="exercise_content">${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
+          }
+        }
+        clickGoalPer = clickGoalPer / response.data.length;
+        document.getElementById('goal_per').innerText = clickGoalPer ? `${clickGoalPer * 100}%` : `0%`;
+      })
+    }
+
+  function formatDate(date) {
+    var myyear = date.getFullYear();
+    var mymonth = date.getMonth() + 1;
+    var myweekday = date.getDate();
+
+    return (myyear + "-" + mymonth + "-" + myweekday);
+  }
+
+    //주차 이동
+
+    let lastCnt = 0;
+    let nextCnt = 0;
+    function moveWeek(){
+
+      let week = document.getElementById('weekRange');
+      let lastDate = week.innerText.split(" ")[1];
+      let nextDate = week.innerText.split(" ")[3];
+
+      const nowClick = event.currentTarget;
+
+
+      let sDate = '';
+      let eDate = '';
+
+      //전주 클릭
+      if(nowClick.innerText === '<'){
+
+        let backWeekArr = [];
+
+        let backYear = lastDate.split("-")[0];
+        let backMon = lastDate.split("-")[1];
+        let backDay = lastDate.split("-")[2];
+        
+        for(var j = 0; j < 7; j++){
+        let lastweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - theDayOfWeek + 7 * lastCnt - 1));
+
+        var backFormatDate = formatDate(lastweekStartDate);
+
+        backFormatDate = backFormatDate.split("-");
+        backFormatDate[1] = backFormatDate[1].length == 2 ? backFormatDate[1] : "0" + backFormatDate[1]
+        backFormatDate[2] = backFormatDate[2].length == 2 ? backFormatDate[2] : "0" + backFormatDate[2]
+
+        let nowDay;
+        nowDay = document.getElementById(`date${j + 1}`);
+        nowDay.innerHTML = `<div id=${backFormatDate[0]}-${backFormatDate[1]}>${backFormatDate[2]}</div>`
+        
+
+        backFormatDate = backFormatDate[0] + "-" + backFormatDate[1] + "-" + backFormatDate[2];
+
+        
+
+        if(j === 0){
+          sDate = backFormatDate;
+        } else if(j === 6){
+          eDate = backFormatDate;
+        }
+        backWeekArr.push(backFormatDate);
+
+      }
+        var weekBack = document.getElementById('weekRange');
+        weekBack.innerHTML = `
+        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><</button>
+        ${sDate} ~ ${eDate}
+        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()">></button>
+        `
+        
+      }
+
+      //차주 클릭
+      else if (nowClick.innerText === '>') {
+
+        let nextWeekArr = [];
+
+        let backYear = lastDate.split("-")[0];
+        let backMon = lastDate.split("-")[1];
+        let backDay = lastDate.split("-")[2];
+
+        for (var j = 0; j < 7; j++) {
+          let nextweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j + theDayOfWeek + 7 * nextCnt + 1));
+
+          var nextFormatDate = formatDate(nextweekStartDate);
+
+          nextFormatDate = nextFormatDate.split("-");
+          nextFormatDate[1] = nextFormatDate[1].length == 2 ? nextFormatDate[1] : "0" + nextFormatDate[1]
+          nextFormatDate[2] = nextFormatDate[2].length == 2 ? nextFormatDate[2] : "0" + nextFormatDate[2]
+
+          //날짜 칸 날짜 바꾸기
+          let nowDay;
+          nowDay = document.getElementById(`date${j + 1}`);
+          nowDay.innerHTML = `<div id=${nextFormatDate[0]}-${nextFormatDate[1]}>${nextFormatDate[2]}</div>`
+
+          nextFormatDate = nextFormatDate[0] + "-" + nextFormatDate[1] + "-" + nextFormatDate[2];
+          nextWeekArr.push(nextFormatDate);
+
+          if (j === 0) {
+            sDate = nextFormatDate;
+          } else if (j === 6) {
+            eDate = nextFormatDate;
+          }
+          nextWeekArr.push(nextFormatDate);
+
+        }
+        var weekBack = document.getElementById('weekRange');
+        weekBack.innerHTML = `
+        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><</button>
+        ${sDate} ~ ${eDate}
+        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()">></button>
+        `
+
+      }
+    }
+
+  </script>
+</body>
+</html>
