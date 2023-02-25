@@ -57,6 +57,15 @@ var app = http.createServer(function(request,response){
             response.end(html);
         });
 
+    }else if(pathname === '/picture'){
+        //서버에 사진 파일 업로드
+        var img = queryData.img;
+        fs.readFile(`./lib/img/${img}`,function(err,data){
+            response.writeHead(200);
+            response.write(data);
+            response.end(); 
+        })
+
     }else if(pathname === '/auth/join' && method === 'GET'){
 
         //회원가입페이지
