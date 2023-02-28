@@ -7,38 +7,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    .main_wrapper{
-display: flex;
-flex-direction: column;
-align-items: center;
-margin: 40px 0;
-    }
+.main_wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0;
+}
 
-    header{
-      width: 100%;
-      
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      /* display: inline; */
-    }
+header{
+  width: 100%;
+  margin: 30px 0;
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* display: inline; */
+}
 
-    #weekRange{
-      line-height: 60px;
-      margin-right: 20px;
-    }
+#weekRange{
+  line-height: 60px;
+  margin-right: 20px;
 
-    .toggleSwitch {
-    width: 80px;
-    height: 40px;
-    display: inline-block;
-    position: relative;
-    border-radius: 30px;
-    background-color: #fff;
-    box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
-    cursor: pointer;
-    margin: 10px;
+  background: #ebeefc;
+  border-radius: 30px;
+  color: black;
+
+  /* width: 173px; */
+}
+
+#lastWeek img{
+  width: 10px;
+  height: 10px;
+
+}
+
+#lastWeek{
+  border: none;
+  background-color: #ebeefc;
+  border-radius: 50px;
+
+  padding-left: 10px;
+}
+
+#nextWeek img{
+  width: 10px;
+  height: 10px;
+
+}
+
+#nextWeek{
+  border: none;
+  background-color: #ebeefc;
+  border-radius: 30px;
+
+  padding-right: 10px;
+}
+
+
+.toggleSwitch {
+  width: 80px;
+  height: 40px;
+  display: inline-block;
+  position: relative;
+  border-radius: 30px;
+  background-color: #fff;
+  box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+  cursor: pointer;
+  margin: 10px;
 }
 
 .toggleSwitch .toggleButton {
@@ -67,7 +103,11 @@ margin: 40px 0;
 
 .weekDate{
   width: 390px;
+
   padding: 20px 0;
+  margin-top: 10px;
+  margin-bottom: 20px;
+
   overflow: scroll;
   color: #112031;
 
@@ -78,9 +118,16 @@ margin: 40px 0;
 
 .dateBox{
   display: inline-block;
-  width: 100px;
-  height: 80px;
-  background-color: #DDDADA;
+  text-align: center;
+  width: 75px;
+  height: 90px;
+
+  margin: 0 10px;
+  
+  color: #7B6F72;
+  background: #F7F8F8;
+  border-radius: 10px;
+
   cursor: pointer;
 }
 
@@ -91,22 +138,94 @@ text-align: center;
 }
 
 .content{
-  width: 315px;
-  height: 209px;
+  width: 100%;
+  height: 200px;
+
+  margin-bottom: 20px;
+  padding: 10px 0;
+
+  background-color: #fff;
+  box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+
+  border-radius: 30px;
 }
 
 .exercise_list{
   padding-left: 0px;
+  overflow-y: scroll;
 }
 
 .exercise_content{
   list-style: none;
+
+  padding-right: 40px;
+  margin: 8px 0;
+}
+
+.exercise_content img{
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
 }
 
 .goal{
   width: 315px;
-  height: 150px;
+  height: 100px;
+
+  background-color: #fff;
+  box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+  border-radius: 30px;
+
+  margin-top: 20px;
+  padding: 30px 0;
 }
+
+.goal p{
+  margin-bottom: 20px;
+  margin-left: 20px;
+
+  color: #7B6F72;
+  font-size: 15px;
+  text-align: left;
+}
+
+.zt-skill-bar {
+  color: #fff;
+  font-size: 11px;
+  line-height: 25px;
+  
+  width: 280px;
+  height: 25px;
+  margin-top: 35px;
+  margin-bottom: 5px;
+  margin-left: 18px;
+
+  background-color: rgba(0,0,0,0.1);
+
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 5px;
+}
+.zt-skill-bar * {
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.zt-skill-bar div {
+  background: linear-gradient(272.69deg, #C58BF2 -59.92%, #92A3FD 86.39%);
+  border-radius: 10px;
+  /* width: 88%; */
+
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+}
+
+
   </style>
 </head>
 <body>
@@ -114,8 +233,8 @@ text-align: center;
   <div class="main_wrapper">
     <header>
       <div id="weekRange" class="weekRange">
-        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()" value="<">전</button>
-        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()" value=">">후</button>
+        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><img src="/picture?img=left_arrow.png" alt="좌" onclick="moveWeek()"/></button>
+        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()"><img src="/picture?img=right_arrow.png" alt="우" onclick="moveWeek()"/></button>
       </div>
       
       <input type="checkbox" id="toggle" hidden>
@@ -164,8 +283,10 @@ text-align: center;
         </ul>
       </div>
       <div class="goal">
-        목표 달성률
-        <div id="goal_per"></div>
+        <p>목표 달성률</p>
+        <div class="zt-skill-bar">
+          <div id="goal_per" data-width=""></div>
+        </div>
       </div>
     </main>
   </div>
@@ -197,10 +318,11 @@ text-align: center;
       day[i] = document.getElementById(`date${i + 1}`);
       day[i].innerHTML = `<div id=${yyyy}-${mm}>${dd}</div>`
 
-
-      if(dd === theDate){
+      const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
+      if(dd === theDate && mm === newMonth && yyyy == theYear){
         //오늘 날짜에 색칠하기
         day[i].parentElement.style.background = 'linear-gradient(274.42deg, #92A3FD 0%, #9DCEFF 124.45%)';
+        day[i].parentElement.style.color = '#fff'; 
 
         //오늘 날짜 표시
         document.getElementById('content_date').innerText = `${dd}일`;
@@ -222,14 +344,15 @@ text-align: center;
               const list = document.getElementById("exercise_list");
 
               if (response.data[i].checked === 1) {
-                list.innerHTML += `<li class="exercise_content"><img src="../images/check.png" alt="체크"/> V ${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
+                list.innerHTML += `<li class="exercise_content"><img src="/picture?img=check.png" alt="체크" />${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
                 goalPer++;
               }else{
                 list.innerHTML += `<li class="exercise_content">${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
               }
             }
             goalPer = goalPer / response.data.length;
-            document.getElementById('goal_per').innerText = goalPer ? `${goalPer * 100}%` : `0%`;
+            document.getElementById('goal_per').style.width = goalPer ? `${goalPer * 100}%` : `0%`;
+             document.getElementById('goal_per').innerText = goalPer ? `${goalPer * 100}%` : `0%`;
           })
       }
     }
@@ -251,9 +374,7 @@ text-align: center;
       const clickDay = event.currentTarget.children[1].innerText;
       const clickYear = event.currentTarget.children[1].children[0].id.split("-")[0];
       const clickMon = event.currentTarget.children[1].children[0].id.split("-")[1];
-      if(clickDay == theDate){
-        return;
-      }
+
       axios.post(`http://localhost:3000/exercise?userId=${paramsBody[0]}`,{
         date: `${clickYear}-${clickMon}-${clickDay}`
       }, {credential: true})
@@ -266,14 +387,16 @@ text-align: center;
         for(var i = 0; i < response.data.length; i++){
           
           if (response.data[i].checked === 1) {
-            list.innerHTML += `<li class="exercise_content">V ${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
+            list.innerHTML += `<li class="exercise_content"><img src="/picture?img=check.png"/>${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
             clickGoalPer++;
           } else {
             list.innerHTML += `<li class="exercise_content">${response.data[i].exerName} ${response.data[i].setNum}세트</li>`;
           }
         }
         clickGoalPer = clickGoalPer / response.data.length;
+        document.getElementById('goal_per').style.width = clickGoalPer ? `${clickGoalPer * 100}%` : `0%`;
         document.getElementById('goal_per').innerText = clickGoalPer ? `${clickGoalPer * 100}%` : `0%`;
+
       })
     }
 
@@ -287,11 +410,10 @@ text-align: center;
 
     //주차 이동
 
-    let lastCnt = 0;
-    let nextCnt = 0;
     function moveWeek(){
 
       let week = document.getElementById('weekRange');
+      console.log(week.innerText);
       let lastDate = week.innerText.split(" ")[1];
       let nextDate = week.innerText.split(" ")[3];
 
@@ -302,7 +424,7 @@ text-align: center;
       let eDate = '';
 
       //전주 클릭
-      if(nowClick.innerText === '<'){
+      if(nowClick.id === 'lastWeek'){
 
         let backWeekArr = [];
 
@@ -311,7 +433,7 @@ text-align: center;
         let backDay = lastDate.split("-")[2];
         
         for(var j = 0; j < 7; j++){
-        let lastweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - theDayOfWeek + 7 * lastCnt - 1));
+        let lastweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - theDayOfWeek - 7 + 1));
 
         var backFormatDate = formatDate(lastweekStartDate);
 
@@ -325,11 +447,14 @@ text-align: center;
         
         const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
         if(nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()){
-          nowDay.parentElement.style.background = '#DDDADA';
+          nowDay.parentElement.style.background = '#F7F8F8';
+          nowDay.parentElement.style.color = '#112031'; 
         }else if(nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`){
           nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
+          nowDay.parentElement.style.color = '#fff'; 
         } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
-          nowDay.parentElement.style.background = '#DDDADA';
+          nowDay.parentElement.style.background = '#F7F8F8';
+          nowDay.parentElement.style.color = '#112031'; 
         }
 
         backFormatDate = backFormatDate[0] + "-" + backFormatDate[1] + "-" + backFormatDate[2];
@@ -346,15 +471,15 @@ text-align: center;
       }
         var weekBack = document.getElementById('weekRange');
         weekBack.innerHTML = `
-        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><</button>
+        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><img src="/picture?img=left_arrow.png" alt="좌" onclick="moveWeek()"/></button>
         ${sDate} ~ ${eDate}
-        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()">></button>
+        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()"><img src="/picture?img=right_arrow.png" alt="우" onclick="moveWeek()"/></button>
         `
         
       }
 
       //차주 클릭
-      else if (nowClick.innerText === '>') {
+      else if (nowClick.id === 'nextWeek') {
 
         let nextWeekArr = [];
 
@@ -363,7 +488,7 @@ text-align: center;
         let backDay = lastDate.split("-")[2];
 
         for (var j = 0; j < 7; j++) {
-          let nextweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j + theDayOfWeek + 7 * nextCnt + 1));
+          let nextweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - theDayOfWeek + 7 + 1));
 
           var nextFormatDate = formatDate(nextweekStartDate);
 
@@ -378,11 +503,14 @@ text-align: center;
 
           const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
           if (nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()) {
-            nowDay.parentElement.style.background = '#DDDADA';
+            nowDay.parentElement.style.background = '#F7F8F8';
+            nowDay.parentElement.style.color = '#112031'; 
           } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`) {
             nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
+            nowDay.parentElement.style.color = '#fff'; 
           } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
-            nowDay.parentElement.style.background = '#DDDADA';
+            nowDay.parentElement.style.background = '#F7F8F8';
+            nowDay.parentElement.style.color = '#112031'; 
           }
 
           nextFormatDate = nextFormatDate[0] + "-" + nextFormatDate[1] + "-" + nextFormatDate[2];
@@ -398,9 +526,9 @@ text-align: center;
         }
         var weekBack = document.getElementById('weekRange');
         weekBack.innerHTML = `
-        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><</button>
+        <button type="button" id="lastWeek" class="lastWeek" onclick="moveWeek()"><img src="/picture?img=left_arrow.png" alt="좌" onclick="moveWeek()"/></button>
         ${sDate} ~ ${eDate}
-        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()">></button>
+        <button type="button" id="nextWeek" class="nextWeek" onclick="moveWeek()"><img src="/picture?img=right_arrow.png" alt="우" onclick="moveWeek()"/></button>
         `
 
       }
