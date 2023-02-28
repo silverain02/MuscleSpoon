@@ -19,6 +19,8 @@
 <br />
 
 ## 팀원 소개
-* <a href='https://github.com/silverain02'>silverain02</a>
-* <a href='https://github.com/hhbb0081'>hhbb0081</a>
-* <a href='https://github.com/yuchael'>yuchael</a>
+
+| FE,BE,기획 | FE,BE,디자인 | FE,BE,디자인 | 
+| --- | --- | --- |
+| 문해빈 | 유채린 | 이은비 |
+|  <img src="https://avatars.githubusercontent.com/u/102276917?v=4" width="100px" height="100px"><br> <a href='https://github.com/hhbb0081'>hhbb0081</a> | <img src="https://avatars.githubusercontent.com/u/97613473?v=4" width="100px" height="100px"><br/><a href='https://github.com/yuchael'>yuchael</a> | <img src="https://avatars.githubusercontent.com/u/108103346?v=4" width="100px" height="100px"><br><a href="https://github.com/silverain02">silverain02</a> |
