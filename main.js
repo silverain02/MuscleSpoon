@@ -9,10 +9,10 @@ var mysql = require('mysql');
 
 //임시 DB
 var db = mysql.createConnection({
-    host     : 'localhost',
+    host     : '127.0.0.1',
     user: 'root',
-    password : 'dpapfkfem12@',  //fill in yours
-    database : 'muscleSpoon'   //need to fill in
+    password : '654321',  //fill in yours
+    database : 'muscle_spoon'   //need to fill in
 })
 db.connect();
 
@@ -244,20 +244,22 @@ var app = http.createServer(function(request,response){
 
     }else if(pathname === '/exercise' && method === 'GET'){
         //운동기록 페이지
-        db.query(`SELECT * FROM exercise WHERE userId=? AND date=?`, [queryData.userId, new Date().toISOString().slice(0, 10)], function(error,exerData){
+        var date = new Date().toISOString().slice(0, 10);;
+        db.query(`SELECT * FROM exercise WHERE userId=? AND date=?`, [queryData.userId, date], function(error,exerData){
             if(error){
                 throw error;
             }
-            var list = template_exercise.list(exerData);
-            var html = template_exercise.HTML(list);
+            var queryDataUserId = queryData.userId;
+            var list = template_exercise.list(exerData, queryDataUserId);
+            var html = template_exercise.HTML(list, queryDataUserId);
             
             response.writeHead(200);
             response.end(html);
         });
     }else if(pathname === '/exercise' && method === 'POST'){
        //운동기록 정보 db에 넣기
-       const body = [];
-            
+       const body = [];    
+
        request.on('data', (data) => {
         body.push(data);
        })
@@ -268,17 +270,20 @@ var app = http.createServer(function(request,response){
         let part = parsedBody.split("\"")[3];
         let exerName = parsedBody.split("\"")[7];
         let setNum = parsedBody.split("\"")[11];
-        let date = parsedBody.split("\"")[15]; 
+        let date = parsedBody.split("\"")[15];
+        let userId = parsedBody.split("\"")[19];
+
+        setNum = setNum*1;
         
         //같은 날짜에 동일한 운동정보가 있는지 확인
-        sql = "SELECT id FROM exercise WHERE part=? AND exerName=? AND date=? AND userID=?";
-        db.query(sql, [part, exerName, date, queryData.userId], function (err, result) {
+        sql = "SELECT id FROM exercise WHERE part=? AND exerName=? AND date=? AND userID=?;";
+        db.query(sql, [part, exerName, date, userId], function (err, result) {
             if (err) throw err;
            
             //동일한 운동정보가 없으면
             if (result[0] === undefined) {
-                sql = "INSERT INTO exercise (id, part, exerName, setNum, date, userID, checkYn) VALUES ?";
-                var values = [null, part, exerName, setNum, date, queryData.userId, null];
+                sql = "INSERT INTO exercise (id, part, exerName, setNum, date, userID, checkYn) VALUES (?);";
+                var values = [null, part, exerName, setNum, date, userId, null];
                 db.query(sql, [values], function (err, result) {
                     if (err) throw err;
                     response.writeHead(200);
@@ -303,29 +308,60 @@ var app = http.createServer(function(request,response){
         request.on('end', () => {
          const parsedBody = Buffer.concat(body).toString();
 
-         let part = parsedBody.split("\"")[3];
-         let exerName = parsedBody.split("\"")[7];
-         let setNum = parsedBody.split("\"")[11]; 
-         let date = parsedBody.split("\"")[15];
+         let id = parsedBody.split("\"")[3];
 
-         sql = "DELETE FROM exercise WHERE part = ? AND exerName = ? AND setNum = ? AND date = ? AND userID=?";
-         db.query(sql, [part, exerName, setNum, date, queryData.userId], function (err, result) {
+         sql = "DELETE FROM exercise WHERE id=?;";
+         db.query(sql, [id], function (err, result) {
             if (err) throw err; 
 
             response.writeHead(200);
             return response.end('1');
            });
         })
+    }else if(pathname === '/exercise/check'){
+        //체크여부 db에 넣기
+        const body = [];
+            
+        request.on('data', (data) => {
+         body.push(data);
+        })
+
+        request.on('end', () => {
+         const parsedBody = Buffer.concat(body).toString();
+
+         let checked = parsedBody.split("\"")[3];
+         let id = parsedBody.split("\"")[7];
+         
+         checked *= 1;
+
+         if (checked === 1){
+            sql = "UPDATE exercise SET checkYn=1 WHERE id=?";
+            db.query(sql, [id], function (err, result) {
+                if (err) throw err; 
+                response.writeHead(200);
+                return response.end('1');
+               });
+         }else{
+            sql = "UPDATE exercise SET checkYn=0 WHERE id=?";
+            db.query(sql, [id], function (err, result) {
+                if (err) throw err; 
+                response.writeHead(200);
+                return response.end('1');
+               });
+         }
+        })
     }else if(pathname === '/diet' && method === 'GET'){
         //식단기록 페이지
-        db.query(`SELECT * FROM diet WHERE userId=? AND date=?`, [queryData.userId, new Date().toISOString().slice(0, 10)], function(error,dietData){
+        var date = new Date().toISOString().slice(0, 10);;
+        db.query(`SELECT * FROM diet WHERE userId=? AND date=?`, [queryData.userId, date], function(error,dietData){
             if(error){
                 throw error;
             }
-            var breakfastList = template_diet.breakfastList(dietData);
-            var lunchList = template_diet.lunchList(dietData);
-            var dinnerList = template_diet.dinnerList(dietData);
-            var html = template_diet.HTML(breakfastList, lunchList, dinnerList);
+            var queryDataUserId = queryData.userId;
+            var breakfastList = template_diet.breakfastList(dietData, queryDataUserId);
+            var lunchList = template_diet.lunchList(dietData, queryDataUserId);
+            var dinnerList = template_diet.dinnerList(dietData, queryDataUserId);
+            var html = template_diet.HTML(breakfastList, lunchList, dinnerList, queryDataUserId);
             
             response.writeHead(200);
             response.end(html);
@@ -345,17 +381,20 @@ var app = http.createServer(function(request,response){
         let dietName = parsedBody.split("\"")[7];
         let gram = parsedBody.split("\"")[11]; 
         let date = parsedBody.split("\"")[15];
+        let userId = parsedBody.split("\"")[19];
 
+        gram *= 1;
+        if (gram === '') gram = null;
         //같은 날짜에 동일한 식단정보가 있는지 확인
-        sql = "SELECT id FROM diet WHERE time=? AND dietName=? AND date=? AND userID=?";
-        db.query(sql, [time, dietName, date, queryData.userId], function (err, result) {
+        sql = "SELECT id FROM diet WHERE time=? AND dietName=? AND date=? AND userID=?;";
+        db.query(sql, [time, dietName, date, userId], function (err, result) {
             if (err) throw err;
           
             //동일한 식단정보가 없으면
             if (result[0] === undefined) {
-                sql = "INSERT INTO diet (id, time, dietName, gram, date, userID) VALUES ?";
-                var values = [null, time, dietName, gram, date, queryData.userId];
-                db.query(sql, values, function (err, result) {
+                sql = "INSERT INTO diet (id, time, dietName, gram, date, userID) VALUES (?);";
+                var values = [null, time, dietName, gram, date, userId];
+                db.query(sql, [values], function (err, result) {
                     if (err) throw err;
                     response.writeHead(200);
                     return response.end('2');
@@ -378,12 +417,10 @@ var app = http.createServer(function(request,response){
         request.on('end', () => {
          const parsedBody = Buffer.concat(body).toString();
 
-         let time = parsedBody.split("\"")[3];
-         let dietName = parsedBody.split("\"")[7];
-         let date = parsedBody.split("\"")[11];
+         let id = parsedBody.split("\"")[3];
 
-         sql = "DELETE FROM diet WHERE time = ? AND dietName = ? AND date = ? AND userID = ?";
-         db.query(sql, [time, dietName, date, queryData.userId], function (err, result) {
+         sql = "DELETE FROM diet WHERE id = ?";
+         db.query(sql, [id], function (err, result) {
             if (err) throw err;  
 
             response.writeHead(200);
