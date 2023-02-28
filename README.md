@@ -14,11 +14,6 @@
 * nodeJS, mysql
 <br />
 
-## 개발 환경
-* mysql @버전
-* visual code @버전
-<br />
-
 ## APIs
 * chart.js
 <br />
@@ -27,4 +22,3 @@
 * <a href='https://github.com/silverain02'>silverain02</a>
 * <a href='https://github.com/hhbb0081'>hhbb0081</a>
 * <a href='https://github.com/yuchael'>yuchael</a>
-* <a href='https://github.com/edo68'>edo68</a>
