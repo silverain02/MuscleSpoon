@@ -319,7 +319,8 @@ text-align: center;
       day[i].innerHTML = `<div id=${yyyy}-${mm}>${dd}</div>`
 
       const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
-      if(dd === theDate && mm === newMonth && yyyy == theYear){
+      const newDate = String(theDate).length === 1 ? '0' + `${theDate}` : `${theDate.toString()}`;
+      if(dd === newDate && mm === newMonth && yyyy == theYear){
         //오늘 날짜에 색칠하기
         day[i].parentElement.style.background = 'linear-gradient(274.42deg, #92A3FD 0%, #9DCEFF 124.45%)';
         day[i].parentElement.style.color = '#fff'; 
@@ -375,6 +376,8 @@ text-align: center;
       const clickYear = event.currentTarget.children[1].children[0].id.split("-")[0];
       const clickMon = event.currentTarget.children[1].children[0].id.split("-")[1];
 
+      document.getElementById('content_date').innerText = `${clickDay}일`;
+
       axios.post(`http://localhost:3000/exercise?userId=${paramsBody[0]}`,{
         date: `${clickYear}-${clickMon}-${clickDay}`
       }, {credential: true})
@@ -413,7 +416,6 @@ text-align: center;
     function moveWeek(){
 
       let week = document.getElementById('weekRange');
-      console.log(week.innerText);
       let lastDate = week.innerText.split(" ")[1];
       let nextDate = week.innerText.split(" ")[3];
 
@@ -433,7 +435,7 @@ text-align: center;
         let backDay = lastDate.split("-")[2];
         
         for(var j = 0; j < 7; j++){
-        let lastweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - theDayOfWeek - 7 + 1));
+        let lastweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - 7));
 
         var backFormatDate = formatDate(lastweekStartDate);
 
@@ -445,14 +447,15 @@ text-align: center;
         nowDay = document.getElementById(`date${j + 1}`);
         nowDay.innerHTML = `<div id=${backFormatDate[0]}-${backFormatDate[1]}>${backFormatDate[2]}</div>`
         
+        const newDate = String(theDate).length === 1 ? '0' + `${theDate}` : `${theDate}`;
         const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
         if(nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()){
           nowDay.parentElement.style.background = '#F7F8F8';
           nowDay.parentElement.style.color = '#112031'; 
-        }else if(nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`){
+        }else if(nowDay.innerText === newDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`){
           nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
           nowDay.parentElement.style.color = '#fff'; 
-        } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
+        } else if (nowDay.innerText === newDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
           nowDay.parentElement.style.background = '#F7F8F8';
           nowDay.parentElement.style.color = '#112031'; 
         }
@@ -488,7 +491,7 @@ text-align: center;
         let backDay = lastDate.split("-")[2];
 
         for (var j = 0; j < 7; j++) {
-          let nextweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j - theDayOfWeek + 7 + 1));
+          let nextweekStartDate = new Date(+backYear, +backMon - 1, +backDay + (j + 7));
 
           var nextFormatDate = formatDate(nextweekStartDate);
 
@@ -501,14 +504,16 @@ text-align: center;
           nowDay = document.getElementById(`date${j + 1}`);
           nowDay.innerHTML = `<div id=${nextFormatDate[0]}-${nextFormatDate[1]}>${nextFormatDate[2]}</div>`
 
+          const newDate = String(theDate).length === 1 ? '0' + `${theDate}` : `${theDate}`;
           const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
+          
           if (nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()) {
             nowDay.parentElement.style.background = '#F7F8F8';
             nowDay.parentElement.style.color = '#112031'; 
-          } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`) {
+          } else if (nowDay.innerText === newDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`) {
             nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
             nowDay.parentElement.style.color = '#fff'; 
-          } else if (nowDay.innerText === theDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
+          } else if (nowDay.innerText === newDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
             nowDay.parentElement.style.background = '#F7F8F8';
             nowDay.parentElement.style.color = '#112031'; 
           }
