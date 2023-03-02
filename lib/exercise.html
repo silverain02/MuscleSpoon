@@ -451,13 +451,13 @@ text-align: center;
         const newMonth = String(theMonth + 1).length === 1 ? '0' + `${theMonth + 1}` : `${theMonth + 1}`;
         if(nowDay.parentElement.style.background === 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)' && nowDay.innerText !== theDate.toString()){
           nowDay.parentElement.style.background = '#F7F8F8';
-          nowDay.parentElement.style.color = '#112031'; 
+          nowDay.parentElement.style.color = '#7B6F72'; 
         }else if(nowDay.innerText === newDate.toString() && nowDay.childNodes[0].id === `${theYear}-${newMonth}`){
           nowDay.parentElement.style.background = 'linear-gradient(274.42deg, rgb(146, 163, 253) 0%, rgb(157, 206, 255) 124.45%)'
           nowDay.parentElement.style.color = '#fff'; 
         } else if (nowDay.innerText === newDate.toString() && nowDay.childNodes[0].id !== `${theYear}-${newMonth}`) {
           nowDay.parentElement.style.background = '#F7F8F8';
-          nowDay.parentElement.style.color = '#112031'; 
+          nowDay.parentElement.style.color = '#7B6F72'; 
         }
 
         backFormatDate = backFormatDate[0] + "-" + backFormatDate[1] + "-" + backFormatDate[2];
