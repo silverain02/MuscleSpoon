@@ -257,7 +257,7 @@ var app = http.createServer(function(request,response){
         // console.log(today);
         var userId = queryData.userId;
         // console.log(userId);
-        fs.readFile('./lib/exercise.html', function (err, data) {
+        fs.readFile('./lib/exerciseWeek.html', function (err, data) {
             if (err) {
                 console.log(err);
             }
@@ -299,7 +299,7 @@ var app = http.createServer(function(request,response){
     else if (pathname === '/diet' && method === 'GET') {
 
         //식단기록
-        fs.readFile('./lib/diet.html', function (err, data) {
+        fs.readFile('./lib/dietWeek.html', function (err, data) {
             if (err) {
                 console.log(err);
             }
